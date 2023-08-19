@@ -10,7 +10,18 @@
 
   $(function() {
 
-    const currentHour = dayjs().hour(); // Get the current hour using Day.js
+    $(function() {
+      const currentHour = dayjs().hour(); // Get the current hour using Day.js
+      
+      // Display the current day at the top of the page
+      const currentDayElement = $('#currentDay');
+      currentDayElement.text(dayjs().format('dddd, MMMM D'));
+    
+      // ... Your existing code ...
+    
+      $('.time-block').each(function() {
+        const timeBlock = $(this);
+        const hour = parseInt(timeBlock.attr('id').replace('hour-', ''), 10); 
   
   $('.time-block').each(function() {
     const timeBlock = $(this);
@@ -51,7 +62,7 @@
       // Save the user input to localStorage using the hour as the key
       localStorage.setItem(hour, description.val());
       
-     
+    })})
     });
     });
   })
