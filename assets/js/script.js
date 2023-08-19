@@ -1,5 +1,3 @@
-var saveBtn = document.querySelector(".saveBtn")
-
 
 
 
@@ -8,16 +6,57 @@ var saveBtn = document.querySelector(".saveBtn")
  // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
-$(function () {
 
-  saveBtn.addEventListener("click", function(event) {
-    event.preventDefault();
 
-   
-localStorage.setItem("save")
-    
+  $(function() {
 
+    const currentHour = dayjs().hour(); // Get the current hour using Day.js
   
+  $('.time-block').each(function() {
+    const timeBlock = $(this);
+    const hour = parseInt(timeBlock.attr('id').replace('hour-', ''), 10); // Extract hour from ID
+
+    // Remove existing classes and then apply new classes based on current time
+    timeBlock.removeClass('past present future');
+    if (hour < currentHour) {
+      timeBlock.addClass('past');
+    } else if (hour === currentHour) {
+      timeBlock.addClass('present');
+    } else {
+      timeBlock.addClass('future');
+    }
+
+
+    const userInput = $('#hour');
+  
+    // Load saved text from localStorage (if any) and populate the input field
+    userInput.val(localStorage.getItem('savedText') || '');
+  
+    // Add event listener to the input element
+    userInput.on('input', function() {
+      // When user types, update the localStorage with the new text
+      localStorage.setItem('savedText', userInput.val());
+    });
+  
+    $('.saveBtn').click(function() {
+      // Get the parent time-block element of the clicked button
+      const timeBlock = $(this).closest('.time-block');
+      
+      // Extract the hour from the time-block's ID
+      const hour = timeBlock.attr('id');
+      
+      // Find the description textarea within the time-block
+      const description = timeBlock.find('.description');
+      
+      // Save the user input to localStorage using the hour as the key
+      localStorage.setItem(hour, description.val());
+      
+     
+    });
+    });
+  })
+
+
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
@@ -36,5 +75,5 @@ localStorage.setItem("save")
   // attribute of each time-block be used to do this?
   //
   // TODO: Add code to display the current date in the header of the page.
-  })
-})
+  
+
